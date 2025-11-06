@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.shortcuts import render
 
 # Register your models here.
-from .models import Location, Evento, Prenotazione
+from .models import Location, Evento, Prenotazione, DataFittizia
 from django.shortcuts import render
 admin.site.register(Location)
 admin.site.register(Evento)
 admin.site.register(Prenotazione)
+admin.site.register(DataFittizia)
 
 def index(request):
     n_eventi = Evento.objects.all().count()
@@ -19,3 +20,7 @@ def index(request):
         'num_prenotazioni': n_prenotazioni,
     }
     return render(request, 'index.html', context= contesto)
+
+@admin.register(DataFittizia)
+class DataFittiziaAdmin(admin.ModelAdmin):
+    list_display = ('data_corrente',)
