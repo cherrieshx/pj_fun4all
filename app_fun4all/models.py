@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 def valida_data_2025(value):
     if not (date(2025, 1, 1) <= value <= date(2025, 12, 31)):
@@ -62,7 +63,7 @@ class Evento(models.Model):
         ordering = ['data_evento']
 
     def clean(self):
-        if self.location and not self.location.disponibile_il(self.data_evento):
+        if self.location and not self.location.Is(self.data_evento):
             raise ValidationError("La location non è disponibile o attiva in quella data.")
 
         eventi_stesso_giorno = Evento.objects.filter(
