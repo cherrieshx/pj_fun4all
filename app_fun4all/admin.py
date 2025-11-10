@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import render
 
-# Register your models here.
+# Register your models here.asdasd
 from .models import Location, Evento, Prenotazione, DataFittizia
 from django.shortcuts import render
 admin.site.register(Location)
@@ -21,6 +21,6 @@ def index(request):
     }
     return render(request, 'index.html', context= contesto)
 
-@admin.register(DataFittizia)
-class DataFittiziaAdmin(admin.ModelAdmin):
-    list_display = ('data_corrente',)
+# @admin.register(DataFittizia)ssssssssss
+# class DataFittiziaAdmin(admin.ModelAdmin):
+#     list_display = ('data_corrente',)
