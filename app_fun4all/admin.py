@@ -21,6 +21,6 @@ def index(request):
     }
     return render(request, 'index.html', context= contesto)
 
-# @admin.register(DataFittizia)ssssssssss
+# @admin.register(DataFittizia)ssssssssssaaaaaaaaaaaaa
 # class DataFittiziaAdmin(admin.ModelAdmin):
 #     list_display = ('data_corrente',)
