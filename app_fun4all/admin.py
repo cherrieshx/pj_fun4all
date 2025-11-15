@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import render
 
-# Register your models here.
+# Register your models here.asdasd
 from .models import Location, Evento, Prenotazione, DataFittizia
 
 
@@ -17,6 +17,7 @@ def index(request):
     }
     return render(request, 'index.html', context= contesto)
 
+<<<<<<< HEAD
 class EventoAdmin(admin.ModelAdmin):
     exclude = ('data_corrente',)
 
@@ -37,3 +38,8 @@ admin.site.register(Location)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(Prenotazione, PrenotazioneAdmin)
 admin.site.register(DataFittizia,DataFittiziaAdmin)
+=======
+# @admin.register(DataFittizia)ssssssssssaaaaaaaaaaaaa
+# class DataFittiziaAdmin(admin.ModelAdmin):
+#     list_display = ('data_corrente',)
+>>>>>>> 3cd3edf6ec045c329de69aa427299ce604aae4d0
