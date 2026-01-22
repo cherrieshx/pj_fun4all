@@ -1,0 +1,16 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<h3>Prenotazioni associate a {{ evento.nome }}</h>
+<ul> 
+    <li>Numero di prenotazioni perdute: {{ evento.biglietti_venduti }} </li>
+    <li>Valore economico perso: {{ valore_perduto }}€</li>
+</ul>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="delete" value="1">Conferma cancellazione</button>
+    <button type="button" onclick="history.back()">Torna a eventi</button>
+</form>
+{% endblock %}

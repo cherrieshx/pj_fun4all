@@ -4,42 +4,35 @@ from django.shortcuts import render
 # Register your models here.asdasd
 from .models import Location, Evento, Prenotazione, DataFittizia
 
-
-def index(request):
-    n_eventi = Evento.objects.all().count()
-    n_locations = Location.objects.all().count()
-    n_prenotazioni = Prenotazione.objects.all().count()
-
-    contesto = {
-        'num_eventi': n_eventi,
-        'num_locations': n_locations,
-        'num_prenotazioni': n_prenotazioni,
-    }
-    return render(request, 'index.html', context= contesto)
-
-<<<<<<< HEAD
 class EventoAdmin(admin.ModelAdmin):
     exclude = ('data_corrente',)
 
 class PrenotazioneAdmin(admin.ModelAdmin):
     exclude = ('data_corrente',)
 
+class LocationAdmin(admin.ModelAdmin):
+    exclude = ('data_corrente',)
+
 class DataFittiziaAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
-        if DataFittizia.objects.exists():
-            return False
-        return True
+        return False  # Disabilita l'aggiunta di nuove istanze
+
+    def changelist_view(self, request, extra_context=None):
+        obj = DataFittizia.load()  # prende sempre il record unico
+        return self.change_view(request, str(obj.pk))
+
+admin.site.register(DataFittizia, DataFittiziaAdmin)
+# @admin.register(DataFittizia)
+# class DataFittiziaAdmin(admin.ModelAdmin):
+#     list_display = ('data_corrente',)
+
+admin.site.register(Location,LocationAdmin)
+admin.site.register(Evento, EventoAdmin)
+admin.site.register(Prenotazione, PrenotazioneAdmin)
+
 
 # @admin.register(DataFittizia)
 # class DataFittiziaAdmin(admin.ModelAdmin):
 #     list_display = ('data_corrente',)
 
-admin.site.register(Location)
-admin.site.register(Evento, EventoAdmin)
-admin.site.register(Prenotazione, PrenotazioneAdmin)
-admin.site.register(DataFittizia,DataFittiziaAdmin)
-=======
-# @admin.register(DataFittizia)ssssssssssaaaaaaaaaaaaa
-# class DataFittiziaAdmin(admin.ModelAdmin):
-#     list_display = ('data_corrente',)
->>>>>>> 3cd3edf6ec045c329de69aa427299ce604aae4d0
+

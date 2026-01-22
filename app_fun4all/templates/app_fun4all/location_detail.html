@@ -1,0 +1,19 @@
+{%extends 'base_generic.html'%}
+{% block content %}
+  <h1>Location Detail: {{ location.nome }}</h1>
+  <p><strong>Luogo:</strong> {{ location.luogo }}</p>
+  <p><strong>Capienza:</strong> {{ location.capienza }}</p>
+  <p><strong>Costo:</strong> {{ location.costo }} € </p>
+  {% if location.stato == 'A' %}
+    <p><strong>Data apertura:</strong> {{ location.data_apertura }}</p>
+    <p><strong>Data chiusura:</strong> {{ location.data_chiusura }}</p>
+    <p><strong>Stato:</strong> Aperto</p>
+  {% else %}
+    <p><strong>Stato:</strong> Chiuso</p>
+  {% endif %}
+  {% if perms.app_fun4all.can_manage_location %}
+    <a href="{% url 'modify-location' location.pk %}">Modifica location</a>
+    <a href="{% url 'locations' %}">Torna alla lista delle location</a>
+
+  {% endif %}
+{% endblock %}

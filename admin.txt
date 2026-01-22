@@ -1,3 +1,11 @@
-Username    | password
+Username  | password   | owns
 
-cherri               hxpaw0000           
+prop1      proploc2     locations   
+prop2      proploc2     locations
+
+org1       orgeven1     eventi
+
+fruit1     fruitpre1    prenotazioni
+
+Admin      adminsito0
+   

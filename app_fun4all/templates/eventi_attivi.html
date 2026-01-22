@@ -1,0 +1,16 @@
+{% comment %} {% extends "base_generic.html" %}
+
+{% block content %}
+
+    <h1>Eventi Attivi</h1>
+    <p>Qui puoi vedere tutti gli eventi attivi.</p>
+
+    <ul>
+    {% for e in eventi_attivi %}
+        <li>{{ evento.nome }} - {{ evento.data_inizio }} a {{ evento.data_fine }}</li>
+    {% empty %}
+        <li>Nessun evento attivo al momento.</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %} {% endcomment %}

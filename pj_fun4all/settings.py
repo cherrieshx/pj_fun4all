@@ -115,9 +115,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Redirect to home URL after login
+LOGIN_REDIRECT_URL = '/'
+# Redirect Django-generated emails to console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Imposta la lingua italiana
+LANGUAGE_CODE = 'it'
+
+# Imposta il fuso orario italiano
+TIME_ZONE = 'Europe/Rome'
+
+# Usa internazionalizzazione
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+

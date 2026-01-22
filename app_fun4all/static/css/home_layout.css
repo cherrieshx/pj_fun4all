@@ -1,0 +1,28 @@
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.container-fluid {
+    width: 100%;
+    min-height: 100vh;
+}
+
+.row {
+    display: flex;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.col-sm-2 {
+    width: 20%;
+    background-color: lightpink;
+    padding: 0;
+}
+
+.col-sm-10 {
+    padding: 20px;
+    width: 80%;
+    background-color: linen;
+}

@@ -4,5 +4,23 @@
 
     <h1>Fun4All Home</h1>
     <p>Benvenuto in Fun4all </p>
-    
+
+    <h6>{{data_corrente}}</h6>
+    <hr>
+    <p><b>Eventi attivi</b>: 
+        {% for evento in eventi_attivi %}
+        
+         <div>
+            <p>{{ evento.nome }}</p>
+            <p>Data: {{ evento.data_evento}}</p>
+            <p>Location: {{ evento.location }}</p>
+            <p>Prezzo: € {{ evento.costo }}</p> 
+            <p>stato: {{ evento.stato}}</p>
+        </div>
+        <hr>
+       
+        {% empty %}
+        <p>Nessun evento attivo.</p>
+        {% endfor %}
 {% endblock %}
+

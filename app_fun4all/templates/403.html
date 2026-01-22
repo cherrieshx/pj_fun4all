@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+{% block content %}
+    <h1>
+        Hey!
+        <span style="color: red;">
+            (You had no permission for the previous page...)
+        </span>
+    </h1>
+    <h2><a href="{% url 'home' %}">Back home</a></h2>
+{% endblock %}
+

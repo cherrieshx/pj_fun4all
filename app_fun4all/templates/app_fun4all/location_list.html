@@ -1,0 +1,23 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>Location List</h1>
+  <ul>
+    {% for location in location_list %}
+      <li>
+        {{ location.nome }} - luogo:{{ location.luogo }} -
+        {%if location.stato == 'A'%}
+            periodo di apertura: da {{ location.data_apertura }} a {{ location.data_chiusura }}
+        {%else%}Chiuso{%endif%} 
+        <button><a href="{% url 'location-detail' location.pk %}">Dettagli</a></button>
+        <hr>
+      </li>
+    {% empty %}
+      <li>Non ci sono location.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+
+{% block NewLocation %}
+  <a href="{% url 'new-location' %}">Aggiungi nuova location</a>
+{% endblock %}

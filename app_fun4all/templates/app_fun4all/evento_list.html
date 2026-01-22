@@ -1,0 +1,35 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>Eventi </h1>
+  
+  <ul>
+    {% for evento in evento_list %}
+      <h4>{{ evento.nome }} </h4>
+      <li>location: {{ evento.location.nome }}</li>
+      <li>luogo: {{ evento.location.luogo }}</li>
+      <li>data: {{ evento.data_evento }} 
+      <li>stato: {%if evento.stato == 'A'%} <b>{{ evento.get_stato_display }}</b>{% else %}{{ evento.get_stato_display }}{% endif %}</li>
+      <li>numero biglietti venduti: {{ evento.biglietti_venduti }} su {{evento.location.capienza}} </li>
+      <li>bilancio economico: {{ evento.bilancio_economico }} € </li>
+      {% if evento.stato == 'A' or evento.stato == 'S' %}
+        {% if evento.se_10_giorni_prima %}
+          <button>
+            <a href="{% url 'cancella-evento' evento.pk %}">Cancella Evento</a>
+          </button>
+        {% endif %}
+      {% endif %}
+      {% if evento.stato == 'S' %}
+          <button><a href="{% url 'cambia-evento-location' evento.pk %}">Cambia location</a></button>
+      {% endif %}
+      
+      <hr>
+    {% empty %}
+      <li>Non ci sono eventi.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+
+{% block NewEvento %}
+  <a href="{% url 'new-evento' %}">Aggiungi nuovo evento</a>
+{% endblock %}

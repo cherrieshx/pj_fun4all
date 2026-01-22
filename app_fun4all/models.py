@@ -11,15 +11,23 @@ def valida_data_2025(value):
 
 class DataFittizia(models.Model):
     data_fittizia = models.DateField(validators=[valida_data_2025])
+    admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     
 
     def __str__(self):
         return f"Data Fittizia: {self.data_fittizia}"
-
+    
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1, defaults={'data_fittizia': '2026-01-22'})
+        return obj
+    
     def save(self, *args, **kwargs):
         print("Sono in data fittizia save")
+        self.pk = 1  # Forza l'ID a 1 per garantire l'unicità
         if not self.pk and DataFittizia.objects.exists():
             raise ValidationError("Può esistere solo una data nel sistema!")
+        
         
         for evento in self.eventi.all():
             evento.update_status()
@@ -31,10 +39,11 @@ class DataFittizia(models.Model):
         super().save(*args, **kwargs)
     class Meta:
         verbose_name_plural = 'Data Fittizia'
-        
+        permissions = (('can_manage_datefittizia', 'Can manage Data Fittizia'),)
+      
 class Location(models.Model):
     nome = models.CharField(max_length=50)
-    proprietario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    proprietario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='locations' )
     luogo = models.CharField(max_length=100)
     capienza = models.PositiveIntegerField()
     costo = models.PositiveIntegerField()
@@ -47,14 +56,16 @@ class Location(models.Model):
         ('A', 'Attivo'),
         ('I', 'Inattivo'),
     ]
-    stato = models.CharField(max_length=1, choices=Stato, default='A')
+    stato = models.CharField(max_length=1, choices=Stato, default='A') #choices genera get_stato_display() che restituisce la descrizione dello stato
     class Meta:
         verbose_name_plural = 'Locations'
         ordering = ['nome']
+        permissions = (('can_manage_location', 'Can manage location'),)
 
     def clean(self):
-        if self.data_chiusura < self.data_apertura:
-            raise ValidationError("La data di chiusura deve essere successiva alla data di apertura.")
+        if self.data_apertura and self.data_chiusura:
+            if self.data_chiusura < self.data_apertura:
+                raise ValidationError("La data di chiusura deve essere successiva alla data di apertura.")
         
     def IsAvailable(self,evento):
         return (self.data_apertura <= evento.data_evento<= self.data_chiusura) and (self.stato == 'A')
@@ -66,12 +77,13 @@ class Location(models.Model):
         if not self.data_corrente:
            self.data_corrente = DataFittizia.objects.first()
         self.clean()
+        super().save(*args, **kwargs) #esegue tutto quello che fa normalmente Django quando salva un modello nel database
         print("Sono in location save")
         for evento in self.eventi.all():
             print(f"AAAAAAAAAAAAAAAAA") 
             evento.update_status()
             evento.save()  # salva gli eventuali cambiamenti dello stato
-        super().save(*args, **kwargs) #esegue tutto quello che fa normalmente Django quando salva un modello nel database
+       
         # aggiorna gli eventi collegati quando cambia la location
         
             
@@ -81,7 +93,7 @@ class Evento(models.Model):
     descrizione = models.CharField(max_length=300 ,help_text='Descrizione dell\'evento')
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null = True, related_name='eventi')
     data_evento = models.DateField(unique=True, validators=[valida_data_2025])
-    organizzatore = models.ForeignKey('auth.User',on_delete=models.SET_NULL, null= True)
+    organizzatore = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='eventi' )
     costo = models.PositiveIntegerField('Costo unitario (€)')
     data_corrente = models.ForeignKey(DataFittizia, on_delete=models.PROTECT, blank=True, null = True,related_name='eventi')
 
@@ -95,8 +107,9 @@ class Evento(models.Model):
 
     stato = models.CharField(max_length=1, choices=Stato, default='A')
     class Meta:
-        verbose_name_plural = 'Eventi'
         ordering = ['data_evento']
+        verbose_name_plural = 'Eventi'
+        permissions = (('can_manage_evento', 'Can manage evento'),)
 
     def clean(self):
         if self.location and self.location.stato == 'I':
@@ -135,14 +148,28 @@ class Evento(models.Model):
         if not self.data_corrente:
             self.data_corrente = DataFittizia.objects.first()
         self.clean()
+        super().save(*args, **kwargs)
         for prenotazione in self.prenotazioni.all():
             print(f"for   DI EVENTO SELF.prenotazione in evento {prenotazione.evento.nome}")
             prenotazione.update_status()
             prenotazione.save()
             print(f"{prenotazione.stato}")  # salva gli eventuali cambiamenti dello stato
         # self.update_status(self.data_corrente)
-        super().save(*args, **kwargs)
+        
     
+    @property
+    def biglietti_venduti(self):
+        return sum(b.numero_biglietti for b in self.prenotazioni.filter(stato='A'))
+
+    @property
+    def bilancio_economico(self):
+        return self.biglietti_venduti * self.costo - self.location.costo
+
+    @property
+    def se_10_giorni_prima(self):
+        return (self.data_evento - self.data_corrente.data_fittizia).days >= 10
+
+
 
 class Prenotazione(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.SET_NULL,null=True, related_name='prenotazioni')
@@ -163,10 +190,11 @@ class Prenotazione(models.Model):
         ('J', 'Scaduta essendo in sospeso')
     ]
     stato = models.CharField(max_length=1, choices=Stato, default='A')
+  
     class Meta:
-        
         verbose_name_plural = 'Prenotazioni'
         ordering = ['-data']
+        permissions = (('can_manage_prenotazione', 'Can manage prenotazione'),)
 
     def clean(self):
         if not self.evento or not self.numero_biglietti:
@@ -233,7 +261,9 @@ class Prenotazione(models.Model):
         # self.update_status(self.data_corrente)
         super().save(*args, **kwargs)  
             
-
+    @property
+    def se_5_giorni_prima(self):
+        return (self.evento.data_evento - self.data_corrente.data_fittizia).days >= 5
 
     
 
