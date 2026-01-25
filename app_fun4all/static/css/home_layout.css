@@ -7,22 +7,35 @@ html, body {
 .container-fluid {
     width: 100%;
     min-height: 100vh;
+    background: linen;
 }
 
-.row {
+/* .row {
     display: flex;
     min-height: 100vh;
     margin: 0;
-}
+} */
 
 .col-sm-2 {
-    width: 20%;
-    background-color: lightpink;
+    height:5%;
+    background-color: rgb(242, 201, 209);
     padding: 0;
+    margin:0;
 }
+
 
 .col-sm-10 {
     padding: 20px;
-    width: 80%;
+    height: 95%;
     background-color: linen;
+}
+
+.titolo{
+    display: inline;
+    padding : 10px 10px;
+    background-color: rgb(204, 214, 225);
+    font-family:cursive;
+    font-size: 30px;
+    color:darkmagenta;
+    border-radius: 130px;
 }

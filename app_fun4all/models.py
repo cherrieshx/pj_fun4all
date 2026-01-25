@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from datetime import date
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 
 def valida_data_2025(value):
     if not (date(2025, 1, 1) <= value <= date(2025, 12, 31)):
@@ -22,6 +23,7 @@ class DataFittizia(models.Model):
         obj, created = cls.objects.get_or_create(pk=1, defaults={'data_fittizia': '2026-01-22'})
         return obj
     
+
     def save(self, *args, **kwargs):
         print("Sono in data fittizia save")
         self.pk = 1  # Forza l'ID a 1 per garantire l'unicità
@@ -39,13 +41,13 @@ class DataFittizia(models.Model):
         super().save(*args, **kwargs)
     class Meta:
         verbose_name_plural = 'Data Fittizia'
-        permissions = (('can_manage_datefittizia', 'Can manage Data Fittizia'),)
+        permissions = (('can_manage_date_fittizia', 'Can manage Data Fittizia'),)
       
 class Location(models.Model):
     nome = models.CharField(max_length=50)
     proprietario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='locations' )
     luogo = models.CharField(max_length=100)
-    capienza = models.PositiveIntegerField()
+    capienza = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     costo = models.PositiveIntegerField()
     data_apertura = models.DateField(validators=[valida_data_2025])
     data_chiusura = models.DateField(validators=[valida_data_2025])
@@ -77,6 +79,11 @@ class Location(models.Model):
         if not self.data_corrente:
            self.data_corrente = DataFittizia.objects.first()
         self.clean()
+        print("Data apertura:", self.data_apertura)
+        print("Data chiusura:", self.data_chiusura) 
+        print("Data corrente:", self.data_corrente.data_fittizia)
+      
+
         super().save(*args, **kwargs) #esegue tutto quello che fa normalmente Django quando salva un modello nel database
         print("Sono in location save")
         for evento in self.eventi.all():
@@ -90,11 +97,11 @@ class Location(models.Model):
     
 class Evento(models.Model):
     nome = models.CharField(max_length=80)
-    descrizione = models.CharField(max_length=300 ,help_text='Descrizione dell\'evento')
+    descrizione = models.CharField(max_length=300 ,)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null = True, related_name='eventi')
     data_evento = models.DateField(unique=True, validators=[valida_data_2025])
     organizzatore = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='eventi' )
-    costo = models.PositiveIntegerField('Costo unitario (€)')
+    costo = models.PositiveIntegerField(help_text='€')
     data_corrente = models.ForeignKey(DataFittizia, on_delete=models.PROTECT, blank=True, null = True,related_name='eventi')
 
     Stato = [
@@ -130,8 +137,14 @@ class Evento(models.Model):
         if self.data_corrente.data_fittizia is None:
             print("Data corrente non definita")
             return
-        if (self.location.stato == 'I' or (not self.location.IsAvailable(self))) and (self.stato == 'A'):
+        if (self.location.stato == 'I' and self.stato == 'A') :
             self.stato = 'S'  # Sospeso per indisponibilità della location
+        elif (not self.location.IsAvailable(self) and self.stato == 'A'):
+            self.stato = 'S'  # Sospeso per indisponibilità della location
+        elif (self.location.IsAvailable(self) and self.stato == 'S'):
+            if( self.location.stato == 'A'):
+                self.stato = 'A'  # Riattiva l'evento se la location è disponibile
+
         if self.data_corrente.data_fittizia > self.data_evento:
             if self.stato == 'A':
                 self.stato = 'F'  # Scaduto e precedente attivo
@@ -174,11 +187,11 @@ class Evento(models.Model):
 class Prenotazione(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.SET_NULL,null=True, related_name='prenotazioni')
     utente = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='prenotazioni')
-    numero_biglietti = models.PositiveIntegerField()
+    numero_biglietti = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     data = models.DateTimeField(auto_now_add=True)
     ID = models.AutoField(primary_key=True)
     data_corrente = models.ForeignKey(DataFittizia, on_delete=models.PROTECT,null = True, blank = True, related_name='prenotazioni')
-
+    
     Stato = [
         ('A', 'Attiva'),
         ('U', 'Cancellata dall\'utente'),
@@ -190,6 +203,8 @@ class Prenotazione(models.Model):
         ('J', 'Scaduta essendo in sospeso')
     ]
     stato = models.CharField(max_length=1, choices=Stato, default='A')
+
+
   
     class Meta:
         verbose_name_plural = 'Prenotazioni'
@@ -265,8 +280,7 @@ class Prenotazione(models.Model):
     def se_5_giorni_prima(self):
         return (self.evento.data_evento - self.data_corrente.data_fittizia).days >= 5
 
-    
-
-
-
+    @property
+    def importo_totale(self):
+        return self.numero_biglietti * self.evento.costo
 

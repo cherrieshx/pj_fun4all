@@ -33,5 +33,7 @@ urlpatterns = [
     path('eventi/new/', views.manage_evento, name='new-evento'),
     path('eventi/<int:pk>/delete/', views.cancella_evento, name='cancella-evento'),
     path('prenotazioni/', views.PrenotazioneListView.as_view(), name='prenotazioni'),
-    path('prenotazioni/new, ', views.manage_prenotazione, name='new-prenotazione'),
+    path('prenotazioni/new/', views.manage_prenotazione, name='new-prenotazione'),
+    path('prenotazioni/<int:pk>/delete/', views.cancella_prenotazione, name='cancella-prenotazione'),
+    
 ]

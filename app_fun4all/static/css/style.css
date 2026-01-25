@@ -1,5 +1,5 @@
 .sidebar-nav {
-    margin-top: 20px;
+    margin-top: px;
     padding: 0;
     list-style: none;
 }
@@ -12,6 +12,107 @@ body {
     margin-bottom: 2vh; 
 }
 
+.btn {
+    
+    border:solid black 0.09em;
+    border-radius: 20px;
+    background-color: lavender;
+    padding: 5px 15px;
+    font-size: 1em;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor:pointer;
+}
+
+
+.btn:hover {
+    background-color: rgb(223, 210, 228);
+    text-shadow: 0.5px 0.5px 0.8px rgb(116, 37, 135);
+
+}
+
+a {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: darkblue;
+    padding: 2px 5px;
+    text-decoration: none;
+}
+
+button:focus {
+    outline: none;
+}
+
+.btn-link {
+    border: 1px ridge darkblue;
+    border-radius: 20px;
+    background-color: rgb(240, 230, 165);
+    padding: 3px 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor:pointer;
+    transition: background-color 0.3s;
+    font-size: 20px;
+}
+
+.btn-link:hover {
+  background-color: rgb(220, 210, 145);
+}
+
+
+/* Caselle input (text, email, number, password...) */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+    font-size: 18px;      
+    padding: 5px 10px;  
+    border-radius: 6px;   
+    border: 1px solid #ccc;
+    width: 400px;  
+       
+}
+
+.descrizione {
+    width: 400px;
+    height: 100px;
+    vertical-align: top;
+}
+
+.sezione{
+    
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: rgb(199, 224, 228);
+}
+
+.sidebar-link{
+
+    margin:0;
+    width: 100%;
+}
+
+
+.sidebar-link a{
+    padding-top:10px;
+    padding-bottom: 10px;
+    width:100%;
+    color : rgb(132, 7, 42);
+    margin:0;
+
+}
+
+.sidebar-link a:hover{
+    border-top: solid;
+    border-bottom: solid;
+    background-color: rgb(234, 158, 193);
+    color: white;
+    transition: background-color 0.3s;
+}
 
 
 .text-success { color: #28a745; }

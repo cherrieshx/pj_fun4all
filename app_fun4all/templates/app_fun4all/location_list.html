@@ -2,22 +2,24 @@
 
 {% block content %}
   <h1>Location List</h1>
-  <ul>
-    {% for location in location_list %}
-      <li>
-        {{ location.nome }} - luogo:{{ location.luogo }} -
-        {%if location.stato == 'A'%}
-            periodo di apertura: da {{ location.data_apertura }} a {{ location.data_chiusura }}
-        {%else%}Chiuso{%endif%} 
-        <button><a href="{% url 'location-detail' location.pk %}">Dettagli</a></button>
-        <hr>
-      </li>
-    {% empty %}
-      <li>Non ci sono location.</li>
-    {% endfor %}
-  </ul>
+  
+    {%if location_list%}
+      
+      {% for location in location_list %}
+          <div class="sezione">
+          <ul>
+            <li><b>{{ location.nome }}</b></li>
+            <li> Luogo:{{ location.luogo }}</li>
+            {%if location.stato == 'A'%}
+              <li> Periodo di apertura: da {{ location.data_apertura }} a {{ location.data_chiusura }}</li>
+            {%else%}<li>Chiuso</li>{%endif%} 
+            <a href="{% url 'location-detail' location.pk %}" class = "btn-link">Dettagli</a>
+            </li>
+          </ul>
+        </div>
+      {% endfor %}   
+    {% else %}
+      <div class="sezione"><li>Non ci sono location.</li></div>
+    {% endif %}
 {% endblock %}
 
-{% block NewLocation %}
-  <a href="{% url 'new-location' %}">Aggiungi nuova location</a>
-{% endblock %}

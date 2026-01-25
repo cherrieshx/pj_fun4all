@@ -16,11 +16,29 @@ class ManageLocationForm(forms.ModelForm):
         model = Location
         fields = ['nome', 'luogo', 'capienza','costo', 'data_apertura', 'data_chiusura', 
                   'stato']
+        widgets = {
+            'nome': forms.TextInput(attrs={
+                'placeholder': 'fino a 80 caratteri',
+            }),
+            'luogo': forms.TextInput(attrs={
+                'placeholder': 'fino a 100 caratteri',
+            }),
+        }
         
 class ManageEventoForm(forms.ModelForm):
     class Meta:
         model = Evento
         fields = ['nome','descrizione','location','data_evento','costo','stato']
+        widgets = {
+            'nome': forms.TextInput(attrs={
+                'placeholder': 'fino a 80 caratteri',
+            }),
+            'descrizione': forms.Textarea(attrs={
+                'class': 'descrizione',
+                'placeholder': 'fino a 300 caratteri',
+                
+            }),
+        }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['stato'].disabled = True  # disabilita la modifica

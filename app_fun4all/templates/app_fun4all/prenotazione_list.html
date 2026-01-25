@@ -2,35 +2,33 @@
 {% block content %}
 
 <h1>Le mie Prenotazioni</h1>
-<ul>
-  {% for prenotazione in prenotazione_list %}
-    <li>
-      <li>Evento: {{ prenotazione.evento.nome }} </li>
-      <li>Nome location: {{ prenotazione.evento.location.nome }} </li>
-      <li>Luogo location: {{ prenotazione.evento.location.luogo }} </li>
-      <li>Data evento: {{ prenotazione.data_evento}} </li>
-      <li>Data prenotazione: {{ prenotazione.data_corrente.data_fittizia }} </li>
-      <li>Numero biglietti: {{ prenotazione.numero_biglietti }} a prezzo unitario di {{ prenotazione.evento.costo}} €</li>
-      <li>Importo totale: {{ prenotazione.importo_totale }} € </li>
-      <li>Stato: {{ prenotazione.get_stato_display }}
-      {% if prenotazione.stato == 'A' or prenotazione.stato == 'S' %}
-        {% if prenotazione.se_5_giorni_prima %}
-            <form method="post">
+  {% if prenotazione_list %}
+    {% for prenotazione in prenotazione_list %}
+      <div class="sezione">
+        <ul>
+          <li>Evento: {{ prenotazione.evento.nome }} </li>
+          <li>Nome location: {{ prenotazione.evento.location.nome }} </li>
+          <li>Luogo location: {{ prenotazione.evento.location.luogo }} </li>
+          <li>Data evento: {{ prenotazione.evento.data_evento}} </li>
+          <li>Data prenotazione: {{ prenotazione.data }} </li>
+          <li>Numero biglietti: {{ prenotazione.numero_biglietti }} a prezzo unitario di {{ prenotazione.evento.costo}} €</li>
+          <li>Importo totale: {{ prenotazione.importo_totale }} € </li>
+          <li>Stato: {{ prenotazione.get_stato_display }}
+          {% if prenotazione.stato == 'A' or prenotazione.stato == 'S' %}
+            {% if prenotazione.se_5_giorni_prima %}
+              <form method="post" style="display:inline" 
+                    onsubmit="return confirm('Sei sicuro di voler cancellare questa prenotazione?');"
+                    action="{% url 'cancella-prenotazione' prenotazione.pk %}">
                 {% csrf_token %}
-                <button type="submit" name="delete" value="1">Cancella prenotazione</button>
-            </form>
-            
-        {% endif %}
-        
-      {% endif %}
-    </li>
-    <hr>
-  {% empty %}
-    <li>Non ci sono prenotazioni.</li>
-  {% endfor %}
-</ul>
+                <button type="submit" name="delete" value="1" >Cancella prenotazione</button>
+              </form>  
+            {% endif %} 
+          {% endif %}
+        </ul>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="sezione"><li>Non ci sono prenotazioni.</li></div>  
+  {% endif %}
 {% endblock %}
 
-{% block NewPrenotazione %}
-  <a href="{% url 'new-prenotazione' %}">Effettua una nuova prenotazione</a>
-{% endblock %}

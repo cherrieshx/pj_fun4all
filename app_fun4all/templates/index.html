@@ -2,25 +2,26 @@
 
 {% block content %}
 
-    <h1>Fun4All Home</h1>
-    <p>Benvenuto in Fun4all </p>
+<div class="titolo">
+    <p class="titolo">Fun4All Home</p>
+</div>
+<p>Benvenuto in Fun4all </p>
+<p>Qui puoi trovare tutti gli eventi attivi:</p>
 
-    <h6>{{data_corrente}}</h6>
-    <hr>
-    <p><b>Eventi attivi</b>: 
-        {% for evento in eventi_attivi %}
-        
-         <div>
-            <p>{{ evento.nome }}</p>
-            <p>Data: {{ evento.data_evento}}</p>
-            <p>Location: {{ evento.location }}</p>
-            <p>Prezzo: € {{ evento.costo }}</p> 
-            <p>stato: {{ evento.stato}}</p>
+{% if eventi_attivi %}
+    {% for evento in eventi_attivi %}
+        <div class="sezione">
+        <ul>
+            <li>{{ evento.nome }}</li>
+            <li>Data: {{ evento.data_evento}}</li>
+            <li>Location: {{ evento.location }}</li>
+            <li>Costo: € {{ evento.costo }}</li> 
+            <li>Stato: {{ evento.get_stato_display}}</li>
+        </ul>
         </div>
-        <hr>
-       
-        {% empty %}
-        <p>Nessun evento attivo.</p>
-        {% endfor %}
+    {% endfor %}
+{% else %}
+    <div class="sezione"><p>Nessun evento attivo.</p></div> 
+{% endif %}
 {% endblock %}
 

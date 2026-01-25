@@ -55,13 +55,14 @@ ROOT_URLCONF = 'pj_fun4all.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'app_fun4all' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app_fun4all.views.data_corrente',  # Aggiungi il context processor personalizzato
             ],
         },
     },

@@ -1,17 +1,16 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-
+<h1>hhhhhhhhhhhLogin</h1>
 {% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
+<p>Nome utente o password errati, riprova.</p>
 {% endif %}
 
 {% if next %}
     {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
+    <p>Il tuo account non ha accesso a questa pagina. Per procedere, effettua il login con un account che ha accesso.</p>
     {% else %}
-    <p>Please login to see this page.</p>
+    <p>Effettua il login per vedere questa pagina.</p>
     {% endif %}
 {% endif %}
 
@@ -32,7 +31,6 @@
 <input type="hidden" name="next" value="{{ next }}">
 </form>
 
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+<p><a href="{% url 'password_reset' %}"> Password dimenticata?</a></p>
 
 {% endblock %}

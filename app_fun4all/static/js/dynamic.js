@@ -22,11 +22,5 @@ function cancella_evento(evento_id) {
     xhttp.send();
 }
 
-function cancella_prenotazione(prenotazione_id) {
-    if (!confirm("Sei sicuro di voler cancellare questa prenotazione?")) return;
-if (!confirm("Sei sicuro di voler cancellare questo evento?")) return;
-
-    const csrfToken = document.getElementById("csrf-token").value;
-}
 
      

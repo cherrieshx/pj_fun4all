@@ -17,42 +17,46 @@
         <div class="row">
             <div class="col-sm-2">
                 {% block sidebar %}
-                    <ul class="sidebar-nav">
-                        <li><a href="{% url 'home' %}">Home</a></li>
+                    <ul class="sidebar-nav">  
                         {% if user.is_authenticated %}
                             <li>
                                 User: {{ user.get_username }}
                                 <form style="display:inline" method="post" 
-                                    action="{% url 'logout' %}?next={{ request.path }}">
+                                    {{request.path}}
+                                    action="{% url 'logout' %}?next={% url 'home' %}">
                                     {% csrf_token %}
-                                    <button style="border:groove; border-radius:5px; background-color: lavender;
-                                                   font-family: 'Lato', sans-serif; font-size:1em;"
-                                                   type="submit">
-                                                   Logout</button>
+                                    <button class="btn">Logout</button>                 
                                 </form>
                             </li>
+                            <hr>
+                            <li class="sidebar-link"><a href="{% url 'home' %}">Home</a></li>
+                            {% if perms.app_fun4all.can_manage_data_fittizia %}
+                                <li class = "sidebar-link" ><a href="{% url 'admin:index' %}">Amministrazione</a></li>
+                                <li class ="sidebar-link"><a href="{% url 'datafittizia' %}">Modifica data fittizia</a></li>
+                            {% endif %}
                             {% if perms.app_fun4all.can_manage_location %}
-                                <li><a href="{% url 'locations' %}">Le mie location</a></li>
-                                {% block NewLocation %}{% endblock %}
-                            {% elif perms.app_fun4all.can_manage_evento %}
-                                <li><a href="{% url 'eventi' %}">I miei eventi</a></li>
-                                {% block NewEvento %}{% endblock %}
-                            {% elif perms.app_fun4all.can_manage_prenotazione %}
-                                <li><a href="{% url 'prenotazioni' %}">Le mie prenotazioni</a></li>
-                                {% block NewPrenotazione %}{% endblock %}
-                            {% elif user.is_superuser %}
-                                <li><a href="{% url 'admin:index' %}">Amministrazione</a></li>
-                                <li><a href="{% url 'datafittizia' %}">Modifica data fittizia</a></li>
+                                <li class="sidebar-link"><a href="{% url 'locations' %}">Le mie location</a></li>
+                                <li class="sidebar-link"><a href="{% url 'new-location' %}">Aggiungi una nuova location</a></li>
+                            {% endif %}
+                            {% if perms.app_fun4all.can_manage_evento %}
+                                <li class="sidebar-link"><a href="{% url 'eventi' %}">I miei eventi</a></li>
+                                <li class="sidebar-link"><a href="{% url 'new-evento' %}">Aggiungi un nuovo evento</a></li>
+                            {% endif %}
+                            {% if perms.app_fun4all.can_manage_prenotazione %}
+                                <li class="sidebar-link"><a href="{% url 'prenotazioni' %}">Le mie prenotazioni</a></li>
+                                <li class="sidebar-link"><a href="{% url 'new-prenotazione' %}">Aggiungi una nuova prenotazione</a></li>
                             {% endif %}
                         {% else %}
-                            <li>No user:
-                                <a href="{% url 'resetlogin' request.path %}">Login</a>
-                                <a href="{% url 'signup' request.path %}">Sign up</a>
+                            <li> No user:
+                                <a class="btn" href="{% url 'resetlogin' request.path %}">Login</a>
+                                <a class="btn" nhref="{% url 'signup' request.path %}">Sign up</a>
                             </li>
                         {% endif %}
                     </ul>
                 {% endblock %}
             </div><div class="col-sm-10">
+                <h6>{{ data_corrente }}</h6>
+                <hr>
                 {% block content %}{% endblock %}
                 {% block pagination %}
                     {% if is_paginated %}

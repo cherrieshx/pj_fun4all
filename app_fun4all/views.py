@@ -11,9 +11,10 @@ from django.contrib.auth.models import User, Group
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from datetime import timedelta
 
 
+def data_corrente(request):#Restituisce la data fittizia a tutti i template
+    return { 'data_corrente': DataFittizia.objects.first() }
 
 def resetlogin(request, next):
     request.session['num_visits'] = 0 # azzera il contatore visite
@@ -36,12 +37,7 @@ class HomeListView(generic.ListView):
                  stato ='A',
                 ).order_by("data_evento","nome","location")
 
-         
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['data_corrente']= DataFittizia.objects.first()
-        return ctx
-    
+        
 
 class LocationListView(generic.ListView):
 
@@ -67,6 +63,11 @@ class PrenotazioneListView(generic.ListView):
     login_url = '/accounts/login/'
     model = Prenotazione
     paginate_by = 3
+    
+
+    def get_queryset(self):
+        return Prenotazione.objects.all().order_by('evento__data_evento','evento__nome')
+    
 
 class LocationDetailView(LoginRequiredMixin,PermissionRequiredMixin, generic.DetailView):
     login_url = '/accounts/login/'
@@ -199,30 +200,35 @@ def cancella_evento(request, pk):
 def manage_prenotazione(request, pk=None):
     if pk:   # Recupera dati dal DB usando il pk, se non esiste lancia 404
         prenotazione = get_object_or_404(Prenotazione, pk=pk)
-        importo_totale = prenotazione.numero_biglietti * prenotazione.evento.costo
     else: # Nuova prenotazione
         prenotazione = None
 
     if request.method == 'POST':
-        if 'delete' in request.POST and prenotazione is not None:
-            prenotazione.stato = 'C'
-            prenotazione.clean()
-            prenotazione.save()
+        form = ManagePrenotazioneForm(request.POST, instance=prenotazione)
+        print(form.errors)
+        if form.is_valid():
+            prn = form.save(commit=False)# Non salviamo ancora l'oggetto nel DB
+            if prenotazione is None:
+                prn.utente = request.user  # Imposta l'utente 
+            prn.clean() #Chiamo metodi di model per validazioni aggiuntive
+            prn.save() # Ora salviamo l'oggetto nel DB
             return HttpResponseRedirect(reverse('prenotazioni'))
-        else:
-            form = ManagePrenotazioneForm(request.POST, instance=prenotazione)
-            if form.is_valid():
-                prn = form.save(commit=False)# Non salviamo ancora l'oggetto nel DB
-                if prenotazione is None:
-                    prn.utente = request.user  # Imposta l'utente 
-                prn.clean() #Chiamo metodi di model per validazioni aggiuntive
-                prn.save() # Ora salviamo l'oggetto nel DB
-                return HttpResponseRedirect(reverse('prenotazioni'))
     else:  # GET request: crea il form con i dati dell'oggetto esistente      
         
         form = ManagePrenotazioneForm(instance=prenotazione)
     
     return render(request, 'app_fun4all/manage_prenotazione.html', {'form': form, 'prenotazione': prenotazione})
+
+@login_required
+@permission_required('app_fun4all.can_manage_prenotazione', raise_exception=True)
+def cancella_prenotazione(request, pk):
+
+    prenotazione = get_object_or_404(Prenotazione, pk=pk)
+    if request.method == 'POST' and 'delete' in request.POST:
+        prenotazione.stato = 'U'
+        prenotazione.save()
+    return HttpResponseRedirect(reverse('prenotazioni'))
+   
 
 def user_signup(request, next):
     if request.method != 'POST':
