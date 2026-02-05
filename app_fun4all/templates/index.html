@@ -1,27 +1,24 @@
 {% extends "base_generic.html"%}
+{% load static %}
 
 {% block content %}
+    <div style ="display:flex; align-items:center; font-size:30px;"><b>Benvenuto in Fun4all!!</b> <img src="{% static 'images/fun.png' %}"  width="60" height="64" class="d-inline-block align-text-top me-2"></div>
+    <h4>Qui puoi trovare tutti gli eventi attivi:</h4>
 
-<div class="titolo">
-    <p class="titolo">Fun4All Home</p>
-</div>
-<p>Benvenuto in Fun4all </p>
-<p>Qui puoi trovare tutti gli eventi attivi:</p>
-
-{% if eventi_attivi %}
-    {% for evento in eventi_attivi %}
-        <div class="sezione">
-        <ul>
-            <li>{{ evento.nome }}</li>
-            <li>Data: {{ evento.data_evento}}</li>
-            <li>Location: {{ evento.location }}</li>
-            <li>Costo: € {{ evento.costo }}</li> 
-            <li>Stato: {{ evento.get_stato_display}}</li>
-        </ul>
-        </div>
-    {% endfor %}
-{% else %}
-    <div class="sezione"><p>Nessun evento attivo.</p></div> 
-{% endif %}
+    {% if eventi_attivi %}
+        {% for evento in eventi_attivi %}
+            <div class="sezione">
+            <b>{{ evento.nome }}</b>
+            <ul>
+                <li>Data: {{ evento.data_evento}}</li>
+                <li>Location: {{ evento.location }}</li>
+                <li>Costo: € {{ evento.costo }}</li> 
+                <li>Stato: {{ evento.get_stato_display}}</li>
+            </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="sezione"><h5>Nessun evento attivo.</h5></div> 
+    {% endif %}
 {% endblock %}
 

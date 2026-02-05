@@ -2,78 +2,107 @@
 <html lang="en">
 <head>
     {% load static %}
-    {% block title %} 
+    {% block title %}
         <title>Fun4All</title>
     {% endblock %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/home_layout.css' %}">
-    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >
-    <script src="{% static 'js/dynamic.js' %}"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/fun.png' %}">
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-2">
-                {% block sidebar %}
-                    <ul class="sidebar-nav">  
+    <div class="box">
+        {% block sidebar %}
+            <nav class="navbar" style="background-color:rgb(232, 215, 228)">
+                <div class="container-fluid d-flex align-items-center">
+   
+                    <div class="col-2">
                         {% if user.is_authenticated %}
-                            <li>
-                                User: {{ user.get_username }}
-                                <form style="display:inline" method="post" 
-                                    {{request.path}}
-                                    action="{% url 'logout' %}?next={% url 'home' %}">
-                                    {% csrf_token %}
-                                    <button class="btn">Logout</button>                 
-                                </form>
-                            </li>
-                            <hr>
-                            <li class="sidebar-link"><a href="{% url 'home' %}">Home</a></li>
-                            {% if perms.app_fun4all.can_manage_data_fittizia %}
-                                <li class = "sidebar-link" ><a href="{% url 'admin:index' %}">Amministrazione</a></li>
-                                <li class ="sidebar-link"><a href="{% url 'datafittizia' %}">Modifica data fittizia</a></li>
-                            {% endif %}
-                            {% if perms.app_fun4all.can_manage_location %}
-                                <li class="sidebar-link"><a href="{% url 'locations' %}">Le mie location</a></li>
-                                <li class="sidebar-link"><a href="{% url 'new-location' %}">Aggiungi una nuova location</a></li>
-                            {% endif %}
-                            {% if perms.app_fun4all.can_manage_evento %}
-                                <li class="sidebar-link"><a href="{% url 'eventi' %}">I miei eventi</a></li>
-                                <li class="sidebar-link"><a href="{% url 'new-evento' %}">Aggiungi un nuovo evento</a></li>
-                            {% endif %}
-                            {% if perms.app_fun4all.can_manage_prenotazione %}
-                                <li class="sidebar-link"><a href="{% url 'prenotazioni' %}">Le mie prenotazioni</a></li>
-                                <li class="sidebar-link"><a href="{% url 'new-prenotazione' %}">Aggiungi una nuova prenotazione</a></li>
-                            {% endif %}
-                        {% else %}
-                            <li> No user:
-                                <a class="btn" href="{% url 'resetlogin' request.path %}">Login</a>
-                                <a class="btn" nhref="{% url 'signup' request.path %}">Sign up</a>
-                            </li>
+                            <button class="navbar-toggler"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#funzionalita"
+                                    aria-expanded="false"
+                                    aria-controls="funzionalita"
+                                    aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
                         {% endif %}
-                    </ul>
-                {% endblock %}
-            </div><div class="col-sm-10">
-                <h6>{{ data_corrente }}</h6>
-                <hr>
-                {% block content %}{% endblock %}
-                {% block pagination %}
-                    {% if is_paginated %}
-                        <div class="pagination">
-                            {% if page_obj.has_previous %} {#se esiste pagina precedente#}
-                            <a href="{{ request.path }}?page= {{ page_obj.previous_page_number }}">previous</a>
-                            {% endif %}
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{# pagina corrente di pagine totali #}
-                            {% if page_obj.has_next %}
-                            <a href="{{ request.path }}?page= {{ page_obj.next_page_number }}">next</a>
-                            {% endif %}
+                    </div>
+
+                    <div class="col-8 text-center">
+                        <a class="navbar-brand" href="{% url 'home' %}" style="display:flex;align-items:center;justify-content:center;">
+                        <img src="{% static 'images/favicon.png' %}" alt="Logo" width="60" height="54" class="d-inline-block align-text-top me-2">
+                        Fun4All
+                    </a>
+                    </div>
+
+                    <div class="col-2 text-end">
+                        {% if user.is_authenticated %}
+                        <div class="autent ">
+                            <span style="margin-right: 15px; font-weight: bold;"> Utente: {{ user.get_username }}</span>
+                            <form style="display:inline" method="post" action="{% url 'logout' %}?next={% url 'home' %}">
+                                {% csrf_token %}
+                                <button class="btn">Logout</button>
+                            </form>
+                        </div>
+                         {% else %}
+                        <div class="autent ">
+                            <a class="btn" href="{% url 'resetlogin' request.path %}">Login</a>
+                            <a class="btn" href="{% url 'signup' request.path %}">Sign up</a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <div class="collapse navbar-collapse" id="funzionalita">
+                            <div class="navbar-nav">
+                                {% if perms.app_fun4all.can_manage_data_fittizia %}
+                                    <a href="{% url 'admin:index' %}" class="nav-funz">Amministrazione</a>
+                                    <a href="{% url 'datafittizia' %}" class="nav-funz" >Modifica data fittizia</a>
+                                {% endif %}
+                                {% if perms.app_fun4all.can_manage_location %}
+                                    <a href="{% url 'locations' %}"  class="nav-funz">Le mie location</a>
+                                    <a href="{% url 'new-location' %}" class="nav-funz" >Aggiungi una nuova location</a>
+                                {% endif %}
+                                {% if perms.app_fun4all.can_manage_evento %}
+                                    <a href="{% url 'eventi' %}" class="nav-funz">I miei eventi</a>
+                                    <a href="{% url 'new-evento' %}" class="nav-funz">Aggiungi un nuovo evento</a>
+                                {% endif %}
+                                {% if perms.app_fun4all.can_manage_prenotazione %}
+                                    <a href="{% url 'prenotazioni' %}" class="nav-funz">Le mie prenotazioni</a>
+                                    <a href="{% url 'new-prenotazione' %}" class="nav-funz">Aggiungi una nuova prenotazione</a>
+                                {% endif %}
+                            </div>
                         </div>
                     {% endif %}
-                {% endblock %} 
-            </div>
-            
+                </div>
+            </nav>
+        {% endblock %}
+
+        <div class="contenuto-principale" id="main-content">
+            <h6>{{ data_corrente }}</h6>
+            <hr>
+            {% block content %}{% endblock %}
+            {% block pagination %}
+                {% if is_paginated %}
+                    <div class="pagination">
+                        {% if page_obj.has_previous %}
+                            <a style="border-right: 1px solid #6C757D;" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                        {% endif %}
+                        <span style="padding: 10px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        {% if page_obj.has_next %}
+                            <a style="border-left: 1px solid #6C757D;" href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endblock %}
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -16,7 +16,7 @@ class DataFittizia(models.Model):
     
 
     def __str__(self):
-        return f"Data Fittizia: {self.data_fittizia}"
+        return f"Data corrente: {self.data_fittizia}"
     
     @classmethod
     def load(cls):
@@ -25,17 +25,14 @@ class DataFittizia(models.Model):
     
 
     def save(self, *args, **kwargs):
-        print("Sono in data fittizia save")
         self.pk = 1  # Forza l'ID a 1 per garantire l'unicità
         if not self.pk and DataFittizia.objects.exists():
             raise ValidationError("Può esistere solo una data nel sistema!")
-        
         
         for evento in self.eventi.all():
             evento.update_status()
             evento.save()  # salva gli eventuali cambiamenti dello stato
             for prenotazione in evento.prenotazioni.all():
-                print(f"for evento.prenotazione in datafittizia {prenotazione.evento.nome}")
                 prenotazione.update_status()
                 prenotazione.save()  # salva gli eventuali cambiamenti dello stato
         super().save(*args, **kwargs)
@@ -163,7 +160,6 @@ class Evento(models.Model):
         self.clean()
         super().save(*args, **kwargs)
         for prenotazione in self.prenotazioni.all():
-            print(f"for   DI EVENTO SELF.prenotazione in evento {prenotazione.evento.nome}")
             prenotazione.update_status()
             prenotazione.save()
             print(f"{prenotazione.stato}")  # salva gli eventuali cambiamenti dello stato
@@ -234,7 +230,6 @@ class Prenotazione(models.Model):
         print(".........................")
         if not self.evento:
             return
-        print(f"PRIMA Stato prenotazione: {self.stato}")
         if self.evento.stato == 'C' :
             self.stato = 'C'  # Cancellata come conseguenza della cancellazione dell'evento
         elif self.evento.stato == 'S' :
@@ -248,7 +243,6 @@ class Prenotazione(models.Model):
         if self.data_corrente.data_fittizia > self.evento.data_evento:
             if self.stato == 'A':
                 self.stato = 'B'  # Scaduta e precedentemente attiva
-                print("Scaduta prenotazione da A a B")
             elif self.stato == 'U':
                 self.stato = 'V'  # Scaduta e precedentemente cancellata da utente
             elif self.stato == 'C':
@@ -256,19 +250,15 @@ class Prenotazione(models.Model):
             elif self.stato == 'S':
                 self.stato = 'J'  # Scaduta essendo in sospeso
         if self.data_corrente.data_fittizia < self.evento.data_evento:
-            print("Data corrente minore della data evento")
             if self.stato == 'B':
                 self.stato = 'A'  # Riattiva la prenotazione se l'evento è attivo e la data corrente è prima dell'evento
-                print("Riattivata prenotazione da B ad A")
             elif self.stato =='V':
                 self.stato = 'U'  # Riattiva la prenotazione se l'evento è attivo e la data corrente è prima dell'evento
             elif self.stato == 'D':
                 self.stato = 'C'  # Riattiva la prenotazione se l'evento è attivo e la data corrente è prima dell'evento
             elif self.stato == 'J':
                 self.stato = 'S'  # Riattiva la prenotazione se l'evento è attivo e la data corrente è prima dell'evento        
-        print(f"DOPO Stato prenotazione: {self.stato}")
-        print(".........................")
-        
+
     def save(self, *args, **kwargs):
         if not self.data_corrente:
             self.data_corrente = DataFittizia.objects.first()

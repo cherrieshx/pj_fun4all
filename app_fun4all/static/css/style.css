@@ -1,8 +1,3 @@
-.sidebar-nav {
-    margin-top: px;
-    padding: 0;
-    list-style: none;
-}
 
 body {
     font-family: "Lato", sans-serif;
@@ -12,6 +7,72 @@ body {
     margin-bottom: 2vh; 
 }
 
+
+.box td{
+    padding: 5px;
+}
+
+
+.box ul{
+    margin-bottom: 0px;
+}
+
+button{
+    
+    display: inline-block;
+    border: 1px solid  black;
+    padding: 3px 10px;
+    cursor: pointer;
+    background-color: #f7e4aa;
+    transition: background-color 0.3s;
+    font-size: 20px;
+    margin: 5px;
+}
+
+
+button:hover{
+    background-color: linen;
+}
+
+button:focus {
+    outline: none;
+}
+
+
+
+/* NAVBAR */
+
+.navbar-brand{
+    display: flex;
+    align-items: center;
+    margin-left:40px;
+    text-align: end;
+}
+
+.autent {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    align-content: end;
+}
+
+.nav-funz{
+    color: black;
+    text-decoration: none;
+    padding-top:10px;
+    padding-bottom:10px;
+    width:100%;
+    margin:0px;
+}
+
+.nav-funz:hover{
+
+    background-color: rgb(231, 206, 235);
+    color: white;
+    transition: background-color 0.5s;
+}
+
+
 .btn {
     
     border:solid black 0.09em;
@@ -19,53 +80,47 @@ body {
     background-color: lavender;
     padding: 5px 15px;
     font-size: 1em;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 5px;
     cursor:pointer;
 }
 
 
 .btn:hover {
+
+    border:solid black 0.09em;
+    border-radius: 20px;
     background-color: rgb(223, 210, 228);
-    text-shadow: 0.5px 0.5px 0.8px rgb(116, 37, 135);
-
+    
 }
 
-a {
-    display: inline-block;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    color: darkblue;
-    padding: 2px 5px;
-    text-decoration: none;
-}
 
-button:focus {
-    outline: none;
-}
+
+/* CONTENUTO PRINCIPALE */
 
 .btn-link {
-    border: 1px ridge darkblue;
-    border-radius: 20px;
-    background-color: rgb(240, 230, 165);
+    display: inline-block;
+    color: black;
+    text-decoration: none;
+    border: 1px solid  black;
     padding: 3px 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
     cursor:pointer;
+    background-color: #f7e4aa;
     transition: background-color 0.3s;
     font-size: 20px;
+    margin-top: 20px;  
 }
 
-.btn-link:hover {
-  background-color: rgb(220, 210, 145);
+.btn-link:hover{
+    color:black;
+    background-color: linen;
 }
-
 
 /* Caselle input (text, email, number, password...) */
 input[type="text"],
 input[type="email"],
 input[type="number"],
 input[type="password"],
+
 textarea,
 select {
     font-size: 18px;      
@@ -85,33 +140,32 @@ select {
 .sezione{
     
     width: 100%;
-    padding: 10px;
+    padding: 20px;
     margin-bottom: 15px;
-    background-color: rgb(199, 224, 228);
+    border: 0.5px solid gray;
+}
+        
+.pagination{
+
+    display:flex;
+    align-items: baseline;
+    width: fit-content;
+    border: 1px solid #6C757D;
+    border-radius: 5px;
 }
 
-.sidebar-link{
+.pagination a{
 
-    margin:0;
-    width: 100%;
+    text-decoration: none;
+    color:black;
+    padding: 10px;  
+    margin:0px; 
 }
 
-
-.sidebar-link a{
-    padding-top:10px;
-    padding-bottom: 10px;
-    width:100%;
-    color : rgb(132, 7, 42);
-    margin:0;
-
-}
-
-.sidebar-link a:hover{
-    border-top: solid;
-    border-bottom: solid;
-    background-color: rgb(234, 158, 193);
-    color: white;
-    transition: background-color 0.3s;
+.pagination a:hover{
+    background-color: rgb(247, 233, 219);
+    transition: background-color 1s;
+    border-radius: 5px;
 }
 
 

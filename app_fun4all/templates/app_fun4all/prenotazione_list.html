@@ -6,14 +6,14 @@
     {% for prenotazione in prenotazione_list %}
       <div class="sezione">
         <ul>
-          <li>Evento: {{ prenotazione.evento.nome }} </li>
+          <li>Evento: <b>{{ prenotazione.evento.nome }} </b></li>
           <li>Nome location: {{ prenotazione.evento.location.nome }} </li>
           <li>Luogo location: {{ prenotazione.evento.location.luogo }} </li>
           <li>Data evento: {{ prenotazione.evento.data_evento}} </li>
           <li>Data prenotazione: {{ prenotazione.data }} </li>
           <li>Numero biglietti: {{ prenotazione.numero_biglietti }} a prezzo unitario di {{ prenotazione.evento.costo}} €</li>
           <li>Importo totale: {{ prenotazione.importo_totale }} € </li>
-          <li>Stato: {{ prenotazione.get_stato_display }}
+          <li>Stato: <b>{{ prenotazione.get_stato_display }}</b></li>
           {% if prenotazione.stato == 'A' or prenotazione.stato == 'S' %}
             {% if prenotazione.se_5_giorni_prima %}
               <form method="post" style="display:inline" 
@@ -28,7 +28,7 @@
       </div>
     {% endfor %}
   {% else %}
-    <div class="sezione"><li>Non ci sono prenotazioni.</li></div>  
+    <div class="sezione"><h4>Non ci sono prenotazioni.</h4></div>  
   {% endif %}
 {% endblock %}
 

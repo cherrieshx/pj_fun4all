@@ -1,13 +1,13 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-  <h1>Eventi</h1>
+  <h1>Gli miei eventi</h1>
 
   {% if evento_list %}
     {% for evento in evento_list %}
       <div class="sezione">
+        <b>{{ evento.nome }}</b>
         <ul>
-          <h4>{{ evento.nome }}</h4>
           <li>Location: {{ evento.location.nome }}</li>
           <li>Luogo: {{ evento.location.luogo }}</li>
           <li>Data: {{ evento.data_evento }}</li>
@@ -23,7 +23,7 @@
 
           {% if evento.stato == 'A' or evento.stato == 'S' %}
             {% if evento.se_10_giorni_prima %}
-              <a href="{% url 'cancella-evento' evento.pk %}" class="btn-link">Cancella Evento</a>
+              <a href="{% url 'cancella-evento' evento.pk %}" class="btn-link">Cancella evento</a>
             {% endif %}
           {% endif %}
 
@@ -36,9 +36,7 @@
     {% endfor %}
   {% else %}
     <div class="sezione">
-      <ul>
-        <li>Non ci sono eventi.</li>
-      </ul>
+      <h4>Non ci sono eventi.<h4>
     </div>
   {% endif %}
 

@@ -1,36 +1,36 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<h1>hhhhhhhhhhhLogin</h1>
-{% if form.errors %}
-<p>Nome utente o password errati, riprova.</p>
-{% endif %}
-
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Il tuo account non ha accesso a questa pagina. Per procedere, effettua il login con un account che ha accesso.</p>
-    {% else %}
-    <p>Effettua il login per vedere questa pagina.</p>
+    <h1>Login</h1>
+    {% if form.errors %}
+    <p>Nome utente o password errati, riprova.</p>
     {% endif %}
-{% endif %}
 
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-</table>
+    {% if next %}
+        {% if user.is_authenticated %}
+        <p>Il tuo account non ha accesso a questa pagina. Per procedere, effettua il login con un account che ha accesso.</p>
+        {% else %}
+        <p>Effettua il login per vedere questa pagina.</p>
+        {% endif %}
+    {% endif %}
 
-<input type="submit" value="login">
-<input type="hidden" name="next" value="{{ next }}">
-</form>
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <table>
+    <tr>
+        <td>{{ form.username.label_tag }}</td>
+        <td>{{ form.username }}</td>
+    </tr>
+    <tr>
+        <td>{{ form.password.label_tag }}</td>
+        <td>{{ form.password }}</td>
+    </tr>
+    </table>
 
-<p><a href="{% url 'password_reset' %}"> Password dimenticata?</a></p>
+    <input type="submit" value="login">
+    <input type="hidden" name="next" value="{{ next }}">
+    </form>
+
+    <div style ="padding-top:20px"><a href="{% url 'password_reset' %}"> Password dimenticata?</a></div>
 
 {% endblock %}

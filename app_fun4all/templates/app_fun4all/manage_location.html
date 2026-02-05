@@ -2,20 +2,20 @@
 
 {% block content %}
 
-<h1>
-    {% if location %}
-        Modifica Location
-    {% else %}
-        Nuova Location
-    {% endif %}
-</h1>
+    <h1>
+        {% if location %}
+            Modifica location
+        {% else %}
+            Nuova location
+        {% endif %}
+    </h1>
 
-<form method="post">
-    {% csrf_token %}
+    <form method="post">
+        {% csrf_token %}
 
-    {{ form.as_p }}
+        {{ form.as_p }}
 
-    <button type="submit">Salva</button>
-</form>
+        <button type="submit">Salva</button>
+    </form>
 
 {% endblock %}

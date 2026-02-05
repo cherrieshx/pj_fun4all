@@ -2,15 +2,17 @@
 
 {% block content %}
 
-<h3>Prenotazioni associate a {{ evento.nome }}</h>
-<ul> 
-    <li>Numero di prenotazioni perdute: {{ evento.biglietti_venduti }} </li>
-    <li>Valore economico perso: {{ valore_perduto }}€</li>
-</ul>
+    <h2>Prenotazioni associate a {{ evento.nome }}</h2>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" name="delete" value="1">Conferma cancellazione</button>
-    <button type="button" onclick="history.back()">Torna a eventi</button>
-</form>
+    <div style="padding:10px">
+        <p>Numero di prenotazioni perdute: {{ evento.biglietti_venduti }} </p>
+        <p>Valore economico perso: {{ valore_perduto }}€</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="delete" value="1">Conferma cancellazione</button>
+        <button type="button" onclick="history.back()">Torna alla lista degli eventi</button>
+    </form>
+
 {% endblock %}

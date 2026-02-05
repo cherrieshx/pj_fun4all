@@ -1,25 +1,24 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-  <h1>Location List</h1>
+  <h1>Le mie location</h1>
   
     {%if location_list%}
       
       {% for location in location_list %}
-          <div class="sezione">
-          <ul>
-            <li><b>{{ location.nome }}</b></li>
-            <li> Luogo:{{ location.luogo }}</li>
+        <div class="sezione">
+          <b>{{ location.nome }}</b>
+          <ul> 
+            <li> Luogo: {{ location.luogo }}</li>
             {%if location.stato == 'A'%}
-              <li> Periodo di apertura: da {{ location.data_apertura }} a {{ location.data_chiusura }}</li>
+            <li> Periodo di apertura: da {{ location.data_apertura }} a {{ location.data_chiusura }}</li>
             {%else%}<li>Chiuso</li>{%endif%} 
-            <a href="{% url 'location-detail' location.pk %}" class = "btn-link">Dettagli</a>
-            </li>
           </ul>
+          <a href="{% url 'location-detail' location.pk %}" class = "btn-link">Dettagli</a>
         </div>
       {% endfor %}   
     {% else %}
-      <div class="sezione"><li>Non ci sono location.</li></div>
+      <div class="sezione"><h4>Non ci sono location.</h4></div>
     {% endif %}
 {% endblock %}
 

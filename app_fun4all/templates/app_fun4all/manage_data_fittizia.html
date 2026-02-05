@@ -1,13 +1,13 @@
 {% extends 'base_generic.html' %}
 {% block content %}
 
-<h1>Modifica Data Fittizia</h1>
+<h1>Modifica data corrente</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-    <button type="submit">Salva</button>
-</form>
+        <button type="submit">Salva</button>
+    </form>
 
 {% endblock %}
