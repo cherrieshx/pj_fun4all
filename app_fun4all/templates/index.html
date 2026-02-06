@@ -12,7 +12,7 @@
             <b>{{ evento.nome }}</b>
             <ul>
                 <li>Data: {{ evento.data_evento}}</li>
-                <li>Location: {{ evento.location }}</li>
+                <li>Location: {{ evento.location.nome }}</li>
                 <li>Costo: € {{ evento.costo }}</li> 
                 <li>Stato: {{ evento.get_stato_display}}</li>
             </ul>

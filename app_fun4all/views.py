@@ -82,7 +82,7 @@ class PrenotazioneListView(LoginRequiredMixin,PermissionRequiredMixin,generic.Li
             all_prenotazioni = Prenotazione.objects.all()
         else:
             all_prenotazioni = Prenotazione.objects.filter(fruitore=self.request.user)
-        return all_prenotazioni.order_by('evento__data_evento','evento__nome','data')
+        return all_prenotazioni.order_by('evento__data_evento','evento__nome','data_corrente__data_fittizia')
     
 
 class LocationDetailView(LoginRequiredMixin,PermissionRequiredMixin, generic.DetailView): #CBV per i dettagli di una location

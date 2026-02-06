@@ -41,7 +41,7 @@ class DataFittizia(models.Model):
 
     class Meta:
         verbose_name_plural = 'Data Fittizia'
-        permissions = (('can_manage_date_fittizia', 'Can manage Data Fittizia'),)
+        permissions = (('can_manage_data_fittizia', 'Can manage Data Fittizia'),)
       
 class Location(models.Model):
     nome = models.CharField(max_length=50)
@@ -61,7 +61,6 @@ class Location(models.Model):
 
     class Meta:
         verbose_name_plural = 'Locations'
-        ordering = ['nome']
         permissions = (('can_manage_location', 'Can manage location'),)
 
     def clean(self):
@@ -86,8 +85,7 @@ class Location(models.Model):
        
         # aggiorna gli eventi collegati quando cambia la location
         
-            
-    
+
 class Evento(models.Model):
     nome = models.CharField(max_length=80)
     descrizione = models.CharField(max_length=300 ,)
@@ -107,7 +105,6 @@ class Evento(models.Model):
 
     stato = models.CharField(max_length=1, choices=Stato, default='A')
     class Meta:
-        ordering = ['data_evento']
         verbose_name_plural = 'Eventi'
         permissions = (('can_manage_evento', 'Can manage evento'),)
 
@@ -178,7 +175,6 @@ class Prenotazione(models.Model):
     fruitore = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='prenotazioni')
     numero_biglietti = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     data = models.DateTimeField(auto_now_add=True)
-    ID = models.AutoField(primary_key=True)
     data_corrente = models.ForeignKey(DataFittizia, on_delete=models.PROTECT,null = True, blank = True, related_name='prenotazioni')
     
     Stato = [
@@ -194,10 +190,9 @@ class Prenotazione(models.Model):
     stato = models.CharField(max_length=1, choices=Stato, default='A')
 
 
-  
+
     class Meta:
         verbose_name_plural = 'Prenotazioni'
-        ordering = ['-data']
         permissions = (('can_manage_prenotazione', 'Can manage prenotazione'),)
 
     def clean(self):
@@ -217,7 +212,7 @@ class Prenotazione(models.Model):
             raise ValidationError("Capacità massima della location superata.")
     
     def __str__(self):
-        return f"Prenotazione {self.ID} - Evento: {self.evento.nome} - Fruitore: {self.fruitore.username} - Biglietti: {self.numero_biglietti}"
+        return f"Prenotazione {self.id} - Evento: {self.evento.nome} - Fruitore: {self.fruitore.username} - Biglietti: {self.numero_biglietti}"
 
     def update_status(self):
         if not self.evento:
