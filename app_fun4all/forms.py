@@ -6,11 +6,14 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import DataFittizia,Location, Evento, Prenotazione
 
+
+
 class ManageDataFittiziaForm(forms.ModelForm):
     class Meta:
         model = DataFittizia
         fields = ['data_fittizia']
-        
+
+
 class ManageLocationForm(forms.ModelForm):
     class Meta:
         model = Location
@@ -35,45 +38,45 @@ class ManageEventoForm(forms.ModelForm):
             }),
             'descrizione': forms.Textarea(attrs={
                 'class': 'descrizione',
-                'placeholder': 'fino a 300 caratteri',
-                
+                'placeholder': 'fino a 300 caratteri',     
             }),
         }
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, *args, **kwargs): #Selezionabile solo le locations non inattive alla data fittizia
         super().__init__(*args, **kwargs)
         self.fields['stato'].disabled = True  # disabilita la modifica
         dt = self.instance.data_evento
-        qs = Location.objects.filter(stato='A')
+        loc = Location.objects.filter(stato='A')
         
         if dt:
-            qs = qs.exclude(
+            loc = loc.exclude(
                 eventi__data_evento=dt,
                 eventi__pk=self.instance.pk 
             )
         else:
-            qs = qs.exclude(eventi__data_evento=dt)
+            loc = loc.exclude(eventi__data_evento=dt)
 
-        self.fields['location'].queryset = qs
+        self.fields['location'].queryset = loc
   
 class ChangeEventoLocationForm(forms.ModelForm):
     class Meta:
         model = Evento
         fields = ['location']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs): #Selezionabile le locations attive disponibili alla data fittizia 
         super().__init__(*args, **kwargs)
         dt = self.instance.data_evento
-        qs = Location.objects.filter(stato='A')
+        loc = Location.objects.filter(stato='A')
         
         if dt:
-            qs = qs.exclude(
+            loc = loc.exclude(
                 eventi__data_evento=dt,
                 eventi__pk=self.instance.pk 
             )
         else:
-            qs = qs.exclude(eventi__data_evento=dt)
+            loc = loc.exclude(eventi__data_evento=dt)
 
-        self.fields['location'].queryset = qs
+        self.fields['location'].queryset = loc
 
 
 class ManagePrenotazioneForm(forms.ModelForm):
@@ -81,9 +84,10 @@ class ManagePrenotazioneForm(forms.ModelForm):
         model = Prenotazione
         fields = ['evento', 'numero_biglietti']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs): #Selezionabile solo gli aventi attivi alla data fittiza
         super().__init__(*args, **kwargs)
-        self.fields['evento'].queryset = Evento.objects.filter(stato='A')
+        dt =  DataFittizia.objects.get(pk=1).data_fittizia
+        self.fields['evento'].queryset = Evento.objects.filter(stato='A', data_evento__gte=dt)
 
 class SignupForm(UserCreationForm):
     class Meta:

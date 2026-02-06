@@ -22,17 +22,9 @@ class DataFittiziaAdmin(admin.ModelAdmin):
         return self.change_view(request, str(obj.pk))
 
 admin.site.register(DataFittizia, DataFittiziaAdmin)
-# @admin.register(DataFittizia)
-# class DataFittiziaAdmin(admin.ModelAdmin):
-#     list_display = ('data_corrente',)
-
 admin.site.register(Location,LocationAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(Prenotazione, PrenotazioneAdmin)
 
-
-# @admin.register(DataFittizia)
-# class DataFittiziaAdmin(admin.ModelAdmin):
-#     list_display = ('data_corrente',)
 
 

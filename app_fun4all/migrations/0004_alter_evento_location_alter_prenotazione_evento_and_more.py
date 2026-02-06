@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='prenotazione',
-            name='utente',
+            name='fruitore',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='prenotazioni', to=settings.AUTH_USER_MODEL),
         ),
     ]

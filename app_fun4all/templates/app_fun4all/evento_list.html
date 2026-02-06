@@ -5,33 +5,51 @@
 
   {% if evento_list %}
     {% for evento in evento_list %}
-      <div class="sezione">
-        <b>{{ evento.nome }}</b>
-        <ul>
-          <li>Location: {{ evento.location.nome }}</li>
-          <li>Luogo: {{ evento.location.luogo }}</li>
-          <li>Data: {{ evento.data_evento }}</li>
-          <li>Stato: 
-            {% if evento.stato == 'A' %}
-              <b>{{ evento.get_stato_display }}</b>
-            {% else %}
-              {{ evento.get_stato_display }}
+      <div class="sezione d-flex">
+        <div style="width:40%">
+          <b>{{ evento.nome }}</b>
+          <ul>
+            <li>Location: {{ evento.location.nome }}</li>
+            <li>Luogo: {{ evento.location.luogo }}</li>
+            <li>Data: {{ evento.data_evento }}</li>
+            <li>Stato: 
+              {% if evento.stato == 'A' %}
+                <b>{{ evento.get_stato_display }}</b>
+              {% else %}
+                {{ evento.get_stato_display }}
+              {% endif %}
+            </li>
+            <li>Numero biglietti venduti: {{ evento.biglietti_venduti }} su {{ evento.location.capienza }}</li>
+            <li>Bilancio economico: {{ evento.bilancio_economico }} €</li>
+
+            {% if evento.stato == 'A' or evento.stato == 'S' %}
+              {% if evento.se_10_giorni_prima %}
+                <a href="{% url 'cancella-evento' evento.pk %}" class="btn-link">Cancella evento</a>
+              {% endif %}
             {% endif %}
-          </li>
-          <li>Numero biglietti venduti: {{ evento.biglietti_venduti }} su {{ evento.location.capienza }}</li>
-          <li>Bilancio economico: {{ evento.bilancio_economico }} €</li>
 
-          {% if evento.stato == 'A' or evento.stato == 'S' %}
-            {% if evento.se_10_giorni_prima %}
-              <a href="{% url 'cancella-evento' evento.pk %}" class="btn-link">Cancella evento</a>
+            {% if evento.stato == 'S' and  evento.se_10_giorni_prima %}
+              <a href="{% url 'cambia-evento-location' evento.pk %}" class="btn-link">Cambia location</a>
             {% endif %}
-          {% endif %}
+          </ul>
+          
+        </div>
+        <div style="width:60%">
+          <p>
+            <button type="button"
+              data-bs-toggle="collapse"
+                    data-bs-target="#collapseDettagli{{ evento.pk }}" 
+                    aria-expanded="false" 
+                    aria-controls="collapseDettagli{{ evento.pk }}">
+                    Descrizione
+            </button>
+          </p>
+          <div class="collapse collapse-vertically" id="collapseDettagli{{ evento.pk }}">
+            <p> {{ evento.descrizione }}</p>
+            
+          </div>
+        </div>
 
-          {% if evento.stato == 'S' %}
-            <a href="{% url 'cambia-evento-location' evento.pk %}" class="btn-link">Cambia location</a>
-          {% endif %}
-
-        </ul>
       </div>
     {% endfor %}
   {% else %}

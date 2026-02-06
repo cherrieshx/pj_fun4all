@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block content %}
-    <div style ="display:flex; align-items:center; font-size:30px;"><b>Benvenuto in Fun4all!!</b> <img src="{% static 'images/fun.png' %}"  width="60" height="64" class="d-inline-block align-text-top me-2"></div>
+    <div style ="display:flex; align-items:center; font-size:30px;"><b>Benvenuto in Fun4all!!</b>
+    <img src="{% static 'images/fun.png' %}"  width="60" height="64" class="d-inline-block align-text-top me-2"></div>
     <h4>Qui puoi trovare tutti gli eventi attivi:</h4>
 
     {% if eventi_attivi %}

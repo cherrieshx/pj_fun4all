@@ -24,6 +24,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='prenotazione',
             name='stato',
-            field=models.CharField(choices=[('A', 'Attiva'), ('U', "Cancellata dall'utente"), ('C', "Cancellata come conseguenza della cancellazione dell'evento"), ('B', 'Scaduta e precedentemente attiva'), ('S', "In sospeso poiché l'evento è in sospeso"), ('V', 'Scaduta e precedentemente cancellata da utente'), ('D', 'Scaduta e precedentemente cancellata causa evento cancellato'), ('J', 'Scaduta essendo in sospeso')], default='A', max_length=1),
+            field=models.CharField(choices=[('A', 'Attiva'), ('U', "Cancellata dal fruitore"), ('C', "Cancellata come conseguenza della cancellazione dell'evento"), ('B', 'Scaduta e precedentemente attiva'), ('S', "In sospeso poiché l'evento è in sospeso"), ('V', 'Scaduta e precedentemente cancellata da fruitore'), ('D', 'Scaduta e precedentemente cancellata causa evento cancellato'), ('J', 'Scaduta essendo in sospeso')], default='A', max_length=1),
         ),
     ]

@@ -1,11 +1,18 @@
 Username  | password   | owns
 
-prop1      proploc2     locations   
-prop2      proploc2     locations
+prop1      proloca1     locations   
+prop2      proloca2     locations
+prop3      proloca3     locations, prenotazioni
 
 org1       orgeven1     eventi
+org2       orgeven2     eventi
+org3       orgeven3     eventi,locations,prenotazioni
 
-fruit1     fruitpre1    prenotazioni
+fruit1     frupren1     prenotazioni
+fruit2     frupren2     prenotazioni
+fruit3     frupren3     prenoatzioni
+fruit4     frupren4     prenotazioni, eventi
 
-Admin      adminsito0
+Admin      adminsito0   Amministratore
+Admin1     adminsito1   Amministratore
    

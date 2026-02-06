@@ -28,7 +28,6 @@ urlpatterns = [
     path('locations/<int:pk>/edit/', views.manage_location, name='modify-location'),
     path('locations/new/', views.manage_location, name='new-location'),
     path('eventi/', views.EventoListView.as_view(), name='eventi'),
-    path('eventi/<int:pk>', views.EventoDetailView.as_view(), name='evento-detail'),
     path('eventi/<int:pk>/cambia_evento_location/', views.change_evento_location, name='cambia-evento-location'),
     path('eventi/new/', views.manage_evento, name='new-evento'),
     path('eventi/<int:pk>/delete/', views.cancella_evento, name='cancella-evento'),

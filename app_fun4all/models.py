@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinValueValidator
 
-def valida_data_2025(value):
+
+def valida_data_2025(value): #Controlla se la data è dell'anno solare 2025
+
     if not (date(2025, 1, 1) <= value <= date(2025, 12, 31)):
         raise ValidationError("La data deve essere compresa nell'anno solare 2025.")
     
@@ -14,28 +16,29 @@ class DataFittizia(models.Model):
     data_fittizia = models.DateField(validators=[valida_data_2025])
     admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     
-
     def __str__(self):
         return f"Data corrente: {self.data_fittizia}"
     
-    @classmethod
-    def load(cls):
-        obj, created = cls.objects.get_or_create(pk=1, defaults={'data_fittizia': '2026-01-22'})
+    @classmethod #primo argomento è la classe
+    def load(cls): 
+        # Recupera o crea l'oggetto con pk=1; se creato, usa 'data_fittizia' di default
+        obj, created = cls.objects.get_or_create(pk=1, defaults={'data_fittizia': '2025-01-1'})
         return obj
-    
+
 
     def save(self, *args, **kwargs):
         self.pk = 1  # Forza l'ID a 1 per garantire l'unicità
         if not self.pk and DataFittizia.objects.exists():
             raise ValidationError("Può esistere solo una data nel sistema!")
         
-        for evento in self.eventi.all():
+        for evento in self.eventi.all(): #Aggiorna lo stato degli eventi e delle prenotazioni alla data impostata
             evento.update_status()
             evento.save()  # salva gli eventuali cambiamenti dello stato
             for prenotazione in evento.prenotazioni.all():
                 prenotazione.update_status()
                 prenotazione.save()  # salva gli eventuali cambiamenti dello stato
         super().save(*args, **kwargs)
+
     class Meta:
         verbose_name_plural = 'Data Fittizia'
         permissions = (('can_manage_date_fittizia', 'Can manage Data Fittizia'),)
@@ -50,12 +53,12 @@ class Location(models.Model):
     data_chiusura = models.DateField(validators=[valida_data_2025])
     data_corrente = models.ForeignKey(DataFittizia, on_delete=models.PROTECT, null=True, blank=True, related_name='locations')
 
-    # Definizione dello stato della location
     Stato =[
         ('A', 'Attivo'),
         ('I', 'Inattivo'),
     ]
     stato = models.CharField(max_length=1, choices=Stato, default='A') #choices genera get_stato_display() che restituisce la descrizione dello stato
+
     class Meta:
         verbose_name_plural = 'Locations'
         ordering = ['nome']
@@ -72,19 +75,12 @@ class Location(models.Model):
     def __str__(self):
         return f"{self.nome} - {self.luogo} ({self.capienza} posti)"
     
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs): 
         if not self.data_corrente:
            self.data_corrente = DataFittizia.objects.first()
         self.clean()
-        print("Data apertura:", self.data_apertura)
-        print("Data chiusura:", self.data_chiusura) 
-        print("Data corrente:", self.data_corrente.data_fittizia)
-      
-
-        super().save(*args, **kwargs) #esegue tutto quello che fa normalmente Django quando salva un modello nel database
-        print("Sono in location save")
-        for evento in self.eventi.all():
-            print(f"AAAAAAAAAAAAAAAAA") 
+        super().save(*args, **kwargs) #Esegue tutto quello che fa normalmente Django quando salva un modello nel database
+        for evento in self.eventi.all(): #Aggiorna lo stato degli eventi dopo lo save della location corrispondente
             evento.update_status()
             evento.save()  # salva gli eventuali cambiamenti dello stato
        
@@ -98,7 +94,7 @@ class Evento(models.Model):
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null = True, related_name='eventi')
     data_evento = models.DateField(unique=True, validators=[valida_data_2025])
     organizzatore = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='eventi' )
-    costo = models.PositiveIntegerField(help_text='€')
+    costo = models.PositiveIntegerField()
     data_corrente = models.ForeignKey(DataFittizia, on_delete=models.PROTECT, blank=True, null = True,related_name='eventi')
 
     Stato = [
@@ -117,7 +113,6 @@ class Evento(models.Model):
 
     def clean(self):
         if self.location and self.location.stato == 'I':
-            print("La location è inagibile a tempo indeterminato ed a prescindere dalla data di apertura e chiusura.")
             return
         eventi_stesso_giorno = Evento.objects.filter(
             location=self.location,
@@ -132,7 +127,6 @@ class Evento(models.Model):
 
     def update_status(self):
         if self.data_corrente.data_fittizia is None:
-            print("Data corrente non definita")
             return
         if (self.location.stato == 'I' and self.stato == 'A') :
             self.stato = 'S'  # Sospeso per indisponibilità della location
@@ -162,8 +156,7 @@ class Evento(models.Model):
         for prenotazione in self.prenotazioni.all():
             prenotazione.update_status()
             prenotazione.save()
-            print(f"{prenotazione.stato}")  # salva gli eventuali cambiamenti dello stato
-        # self.update_status(self.data_corrente)
+       # salva gli eventuali cambiamenti dello stato
         
     
     @property
@@ -182,7 +175,7 @@ class Evento(models.Model):
 
 class Prenotazione(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.SET_NULL,null=True, related_name='prenotazioni')
-    utente = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='prenotazioni')
+    fruitore = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='prenotazioni')
     numero_biglietti = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     data = models.DateTimeField(auto_now_add=True)
     ID = models.AutoField(primary_key=True)
@@ -190,11 +183,11 @@ class Prenotazione(models.Model):
     
     Stato = [
         ('A', 'Attiva'),
-        ('U', 'Cancellata dall\'utente'),
+        ('U', 'Cancellata dal fruitore'),
         ('C', 'Cancellata come conseguenza della cancellazione dell\'evento'),
         ('B', 'Scaduta e precedentemente attiva'),
         ('S', 'In sospeso poiché l\'evento è in sospeso'),
-        ('V', 'Scaduta e precedentemente cancellata da utente'),
+        ('V', 'Scaduta e precedentemente cancellata da fruitore'),
         ('D', 'Scaduta e precedentemente cancellata causa evento cancellato'),
         ('J', 'Scaduta essendo in sospeso')
     ]
@@ -224,10 +217,9 @@ class Prenotazione(models.Model):
             raise ValidationError("Capacità massima della location superata.")
     
     def __str__(self):
-        return f"Prenotazione {self.ID} - Evento: {self.evento.nome} - Utente: {self.utente.username} - Biglietti: {self.numero_biglietti}"
+        return f"Prenotazione {self.ID} - Evento: {self.evento.nome} - Fruitore: {self.fruitore.username} - Biglietti: {self.numero_biglietti}"
 
     def update_status(self):
-        print(".........................")
         if not self.evento:
             return
         if self.evento.stato == 'C' :
@@ -244,7 +236,7 @@ class Prenotazione(models.Model):
             if self.stato == 'A':
                 self.stato = 'B'  # Scaduta e precedentemente attiva
             elif self.stato == 'U':
-                self.stato = 'V'  # Scaduta e precedentemente cancellata da utente
+                self.stato = 'V'  # Scaduta e precedentemente cancellata dal fruitore
             elif self.stato == 'C':
                 self.stato = 'D'  # Scaduta e precedentemente cancellata causa evento cancellato    
             elif self.stato == 'S':
@@ -263,7 +255,6 @@ class Prenotazione(models.Model):
         if not self.data_corrente:
             self.data_corrente = DataFittizia.objects.first()
         self.clean()
-        # self.update_status(self.data_corrente)
         super().save(*args, **kwargs)  
             
     @property

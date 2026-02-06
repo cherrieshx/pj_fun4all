@@ -56,9 +56,9 @@ class Migration(migrations.Migration):
                 ('numero_biglietti', models.PositiveIntegerField()),
                 ('data', models.DateTimeField(auto_now_add=True)),
                 ('ID', models.AutoField(primary_key=True, serialize=False)),
-                ('stato', models.CharField(choices=[('A', 'Attiva'), ('U', "Cancellata dall'utente"), ('C', "Cancellata come conseguenza della cancellazione dell'evento"), ('B', "Scaduta e precedentemente cancellata dall'utente"), ('S', "In sospeso poiché l'evento è in sospeso"), ('V', 'Scaduta e precedentemente cancellata da utente'), ('D', 'Scaduta e precedentemente cancellata causa evento cancellato'), ('J', 'Scaduta essendo in sopseso')], default='A', max_length=1)),
+                ('stato', models.CharField(choices=[('A', 'Attiva'), ('U', "Cancellata dal fruitore"), ('C', "Cancellata come conseguenza della cancellazione dell'evento"), ('B', "Scaduta e precedentemente cancellata dal fruitore"), ('S', "In sospeso poiché l'evento è in sospeso"), ('V', 'Scaduta e precedentemente cancellata da fruitore'), ('D', 'Scaduta e precedentemente cancellata causa evento cancellato'), ('J', 'Scaduta essendo in sopseso')], default='A', max_length=1)),
                 ('evento', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='app_fun4all.evento')),
-                ('utente', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ('fruitore', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name_plural': 'Prenotazioni',

@@ -8,8 +8,8 @@ html, body {
     width: 100%;
     min-height: 100vh;
     background: linen;
+    overflow: auto;
 }
-
 
 .contenuto-principale {
     padding: 20px;
