@@ -203,9 +203,3 @@ http://127.0.0.1:8000/admin/
 Per testare nella cartella vi è un file admin.txt ove ci sono le credenziali per vari tipi di utenti.
 
 
-
----
-
-## Autori
-
-Progetto realizzato per il corso di **Progettazione e Sviluppo di Applicazioni Web** – Anno Accademico 2024/2025.
