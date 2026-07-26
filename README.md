@@ -126,7 +126,7 @@ git clone https://github.com/USERNAME/Fun4All.git
 Entrare nella cartella del progetto:
 
 ```bash
-cd Fun4All
+cd pj_fuun4All
 ```
 
 Creare un ambiente virtuale:
