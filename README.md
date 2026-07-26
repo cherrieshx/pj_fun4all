@@ -149,14 +149,6 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-Installare le dipendenze:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
 ## Configurazione del Database
 
 Applicare le migrazioni:
