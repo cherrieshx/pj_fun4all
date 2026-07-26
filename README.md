@@ -149,7 +149,7 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### Installare Django e pip
+### Installare Django e pip nell'ambiente virtuale
 
 ```bash
 pip install django
