@@ -2,7 +2,7 @@
 
 ## Descrizione
 
-**Fun4All** è un progetto universitario sviluppato con Django per il corso di **Progettazione e Sviluppo di Applicazioni Web**.
+**Fun4All** è un progetto universitario sviluppato con Django per il corso di **Progettazion di Applicazioni Web**.
 
 L'applicazione consente la gestione di eventi di intrattenimento pubblico, come concerti, fiere del fumetto, festival e manifestazioni, mettendo in comunicazione diverse tipologie di utenti:
 
