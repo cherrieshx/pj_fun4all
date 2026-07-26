@@ -149,6 +149,13 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
+### Installare Django e pip
+
+```bash
+pip install django
+python.exe -m pip install --upgrade pip
+```
+
 ## Configurazione del Database
 
 Applicare le migrazioni:
