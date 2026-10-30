@@ -8,15 +8,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.1">
+    <link rel="stylesheet" href="{% static 'css/home_layout.css' %}?v=2.1">
     <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'images/fun.png' %}">
 </head>
 <body>
     <div class="box">
         {% block sidebar %}
-            <nav class="navbar" style="background-color:rgb(232, 215, 228)">
+            <nav class="navbar" style="background-color: #2e1065;">
                 <div class="container-fluid d-flex align-items-center">
    
                     <div class="col-2">
@@ -91,11 +91,11 @@
                 {% if is_paginated %}
                     <div class="pagination">
                         {% if page_obj.has_previous %}
-                            <a style="border-right: 1px solid #6C757D;" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                            <a class="pagination-prev" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
                         {% endif %}
-                        <span style="padding: 10px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
                         {% if page_obj.has_next %}
-                            <a style="border-left: 1px solid #6C757D;" href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                            <a class="pagination-next" href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
                         {% endif %}
                     </div>
                 {% endif %}
