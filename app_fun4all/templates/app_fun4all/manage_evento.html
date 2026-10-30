@@ -1,4 +1,5 @@
 {% extends 'base_generic.html' %}
+{% load static %}
 {% block content %}
 
     <h1>Nuovo evento</h1>
@@ -7,7 +8,13 @@
         {% csrf_token %}
         {{ form.as_p }}
 
+        <button type="button" onclick="generaConAI()" class="btn-link" style="margin-bottom: 15px;">
+            ✨ Genera descrizione con AI
+        </button>
+
+        <br>
         <button type="submit">Salva</button>
     </form>
 
+    <script src="{% static 'js/dynamic.js' %}"></script>
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .ai_features import genera_descrizione_evento
 from .models import Evento, Location, Prenotazione, DataFittizia
 from .forms import ManageDataFittiziaForm,ManageLocationForm, ChangeEventoLocationForm, ManageEventoForm, ManagePrenotazioneForm,ManagePrenotazioneForm,SignupForm
 from django.views import generic
@@ -10,6 +11,10 @@ from django.contrib.auth.models import  Group
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+import json
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
 
 
 def data_corrente(request): #FBV che restituisce la data fittizia 
@@ -187,6 +192,21 @@ def manage_evento(request, pk=None):
         form = ManageEventoForm(instance=evento)
     return render(request, 'app_fun4all/manage_evento.html', {'form': form, 'evento': evento})
 
+@login_required
+@permission_required('app_fun4all.can_manage_evento', raise_exception=True)
+@require_POST
+def api_genera_descrizione(request):
+    try:
+        data = json.loads(request.body)
+        nome = data.get('nome', '').strip()
+        
+        if not nome:
+            return JsonResponse({'error': 'Inserisci prima il nome dell\'evento!'}, status=400)
+            
+        descrizione = genera_descrizione_evento(nome)
+        return JsonResponse({'descrizione': descrizione})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 #FBV per la cancellazione di un evento da parte di un proprietario, mostra in una pagina valore economi perduto
 @login_required

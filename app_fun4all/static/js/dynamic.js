@@ -22,5 +22,40 @@ function cancella_evento(evento_id) {
     xhttp.send();
 }
 
+async function generaConAI() {
+    const Nome = document.getElementById("id_nome");
+    const Descrizione = document.getElementById("id_descrizione");
+
+    if (!Nome || !Nome.value.trim()) {
+        alert("Per favore, inserisci prima il nome dell'evento!");
+        if (Nome) Nome.focus();
+        return;
+    }
+    const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+    const csrfToken = csrfInput ? csrfInput.value : "";
+
+    Descrizione.value = "Generazione in corso con l'AI...";
+    try {
+        const response = await fetch("/api/genera-descrizione/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify({ nome: Nome.value.trim() })
+        });
+        const data = await response.json();
+        if (data.descrizione) {
+            Descrizione.value = data.descrizione;
+        } else {
+            alert("Errore: " + (data.error || "Impossibile generare la descrizione"));
+            Descrizione.value = "";
+        }
+    } 
+    catch (error) {
+        alert("Errore di connessione con il server: " + error);
+            Descrizione.value = "";
+    }
+}
 
      

@@ -34,5 +34,6 @@ urlpatterns = [
     path('prenotazioni/', views.PrenotazioneListView.as_view(), name='prenotazioni'),
     path('prenotazioni/new/', views.manage_prenotazione, name='new-prenotazione'),
     path('prenotazioni/<int:pk>/delete/', views.cancella_prenotazione, name='cancella-prenotazione'),
+    path('api/genera-descrizione/', views.api_genera_descrizione, name='api-genera-descrizione'),
     
 ]
